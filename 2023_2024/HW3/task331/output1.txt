@@ -1,0 +1,1 @@
+The figure with the largest measure in input01.txt is Cone: r=23, h=20 with volume of 11079.350091660002
