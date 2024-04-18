@@ -1,1 +1,1 @@
-The figure with the largest measure in input03.txt is Rectangular Parallelepiped: a=21, b=17, h=3 with volume of 1071
+The figure with the largest measure in input03.txt is Rectangular Parallelepiped: a=24, b=11, h=24 with volume of 6336

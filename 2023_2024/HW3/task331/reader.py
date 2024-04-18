@@ -6,18 +6,20 @@ class Output:
 
     def read_file(self):
         with open(self.filename, "rt") as inpf:
-            data = dict()
+            data = []
             for line in inpf:
-                datum = [el for el in line.split()]
-                key = datum[0]
-                values = [int(el) for el in datum[1:]]
-                data.update({key: values})
-        return data
+                key_datum = [line.split()[0]]
+                for el in line.split()[1:]:
+                    key_datum.append(int(el))
+                data.append(key_datum)
+            return data
 
     def initialiser(self):
         figurines = []
         try:
-            for key, value in self.read_file().items():
+            for datum in self.read_file():
+                key = datum[0]
+                value = datum[1:]
                 if key == "Triangle":
                     f = Triangle(*value)
                     figurines.append(f)
@@ -68,14 +70,15 @@ class Output:
     def largest_measure(self):
         volumes = self.measure_finder()
         data = self.initialiser()
-        largest_figurine = data[0]
         try:
+            largest_figurine = data[0]
+
             for i in range(1, len(volumes)+1):
                 if data[i].volume() > largest_figurine.volume():
                     largest_figurine = data[i]
         except(TypeError, AttributeError, IndexError):
             pass
-        return largest_figurine
+            return largest_figurine
 
     def output(self, outfile):
         with open(outfile, "wt") as of:

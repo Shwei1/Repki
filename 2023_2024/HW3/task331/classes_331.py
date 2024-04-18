@@ -29,6 +29,7 @@ class Figure:
     def volume(self):
         return None
 
+
 class Triangle(Figure):
     def __init__(self, a, b, c):
         sides = [a, b, c]
@@ -78,6 +79,7 @@ class Rectangle(Figure):
 
     def __str__(self):
         return f"Rectangle: a={self.a}, b={self.b}"
+
 
 class Trapezium(Figure):
     def __init__(self, a, b, c, d):
@@ -152,6 +154,7 @@ class Circle(Figure):
     def __str__(self):
         return f"Circle: r={self.r}"
 
+
 class Sphere(Figure):
     def __init__(self, r):
         self.r = r
@@ -163,7 +166,7 @@ class Sphere(Figure):
         return self.r * 2
 
     def volume(self):
-        return 4/3 * self.pi * self.r ** 3
+        return (4/3) * self.pi * self.r ** 3
 
     def surface_area(self):
         return 4 * self.pi * self.r ** 2
@@ -268,7 +271,7 @@ class Cone(Circle):
         return math.pi * l * self.r
 
     def volume(self):
-        return 1/3 * math.pi * (self.r ** 2) * self.h
+        return (1/3) * math.pi * (self.r ** 2) * self.h
 
 
 class TriangularPrism(Triangle):
