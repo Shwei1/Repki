@@ -1,31 +1,20 @@
 #include <stdio.h>
 #include <math.h>
 
-long double sixteen_pow_k(long int k) {
-    long int product = 1;
-    for (int i=0; i < k; i++) {
-        product *= 16;
-    }
-    return product;
-}
 
-long int negone_pow_k(long int k) {
-    if (k & 1) {
-        return -1;
-    }
-    else {
-        return 1;
-    }
-
-}
 long double series_pi(long double epsilon) {
     long int k = 0;
-    long double result = 0;
-    while (M_PI - (result * 0.5) > epsilon) {
-        result += negone_pow_k(k) / sixteen_pow_k(k) * (8/(8*(long double)k+2)+4/(8*(long double)k+3)+4/(8*(long double)k+4)-(1/(8*(long double)k+7)));
+    long double result = 0.0, term;
+    do {
+        term = 1.0/powl(16,k) * (
+                4.0/(8.0*k+1.0)
+                -2.0/(8.0*k+4.0)
+                -1.0/(8.0*k+5.0)
+                -1.0/(8.0*k+6.0));
+        result += term;
         k++;
-    }
-    return result * 0.5;
+    } while (term > epsilon);
+    return result;
 }
 
 int main(){
