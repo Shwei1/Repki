@@ -12,12 +12,12 @@ int main() {
             printf("No zero-bit as one-bit does not exist.\n");
             break;
         case 1:
-            printf("Index of the first one-bit is 1.\n");
+            printf("Index of the first one-bit is 0.\n");
             printf("No zero-bit.");
             break;
         case 2:
-            printf("Index of the first one-bit is 2.\n");
-            printf("Index of the first zero-bit after the first one-bit is 1.\n");
+            printf("Index of the first one-bit is 1.\n");
+            printf("Index of the first zero-bit after the first one-bit is 0.\n");
             break;
         default:
             do {
@@ -30,11 +30,11 @@ int main() {
 
             } while (condition);
             if (x > 2) {
-                printf("Index of the first one-bit is %li.\n", sizeof(int) * 8 - k + 1);
+                printf("Index of the first one-bit is %li.\n", sizeof(int) * 8 - k);
             } else if (x == 1) {
-                printf("1\n");
+                printf("0\n");
             } else if (x == 2) {
-                printf("2\n");
+                printf("1\n");
             }
             x = ~x;
             x = (x << k) >> k;
@@ -49,7 +49,7 @@ int main() {
             } while (condition);
 
             if (x > 2) {
-                printf("Index of the first zero-bit after the first one-bit is %li.\n", sizeof(int) * 8 - k + 1);
+                printf("Index of the first zero-bit after the first one-bit is %li.\n", sizeof(int) * 8 - k);
             }
     }
 
