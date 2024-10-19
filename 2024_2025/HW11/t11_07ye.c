@@ -1,9 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void convert_txt_to_bin(const char *txt_filename, const char *bin_filename) {
+    FILE *txt_file = fopen(txt_filename, "r");
+    if (txt_file == NULL) {
+        perror("Failed to open text file");
+        exit(1);
+    }
+
+    FILE *bin_file = fopen(bin_filename, "wb");
+    if (bin_file == NULL) {
+        perror("Failed to open binary file");
+        fclose(txt_file);
+        exit(1);
+    }
+
+    double num;
+
+    while (fscanf(txt_file, "%lf", &num) == 1) {
+        fwrite(&num, sizeof(double), 1, bin_file);
+    }
+
+    fclose(txt_file);
+    fclose(bin_file);
+    printf("Successfully converted '%s' to binary '%s'.\n", txt_filename, bin_filename);
+}
+
 void append_nums(FILE *f, double **arr, int *c, int *s){
     double n;
-    while (fscanf(f, "%lf", &n) == 1) {
+    while (fread(&n, sizeof(double),1, f) == 1) {
         if (*s == *c) {
             *c *= 2;
             double *temp = realloc(*arr, *c * sizeof(double));
@@ -48,10 +73,20 @@ int main(){
     int capacity = 2;
     int size = 0;
     char filename[] = "input1107ye.txt";
+    char bin_filename[] = "input1107ye.bin";
 
     numbers = (double *)malloc(capacity * sizeof(double));
 
-    f = fopen(filename, "r");
+
+    convert_txt_to_bin(filename, bin_filename);
+
+    f = fopen(bin_filename, "rb");
+
+    if (f == NULL) {
+        perror("Failed to open files for reading");
+        free(numbers);
+        return 1;
+    }
 
     append_nums(f, &numbers, &capacity, &size);
 

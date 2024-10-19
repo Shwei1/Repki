@@ -8,46 +8,102 @@ typedef struct Passenger{
     double b_mass;
 } Passenger;
 
-void read_collection(FILE *f, Passenger **arr, int *c, int *s, char *buffer, size_t buffer_size){
-    int index;
-    int baggage_count;
-    double baggage_mass;
+void convert_txt_to_bin(const char *txt_filename, const char *bin_filename) {
+    FILE *txt_file = fopen(txt_filename, "r");
+    if (txt_file == NULL) {
+        perror("Failed to open text file");
+        exit(1);
+    }
 
-    while (fgets(buffer, buffer_size, f) != NULL) {
-        sscanf(buffer, "%d %d %lf", &index, &baggage_count, &baggage_mass);
+    FILE *bin_file = fopen(bin_filename, "wb");
+    if (bin_file == NULL) {
+        perror("Failed to open binary file");
+        fclose(txt_file);
+        exit(1);
+    }
+
+    Passenger p;
+
+    while (fscanf(txt_file, "%d %d %lf", &p.i, &p.b_count, &p.b_mass) == 3) {
+        fwrite(&p, sizeof(Passenger), 1, bin_file);
+    }
+
+    fclose(txt_file);
+    fclose(bin_file);
+    printf("Successfully converted '%s' to binary '%s'.\n", txt_filename, bin_filename);
+}
+
+
+void convert_names_to_bin(const char *txt_filename, const char *bin_filename) {
+    FILE *txt_file = fopen(txt_filename, "r");
+    if (txt_file == NULL) {
+        perror("Failed to open text file");
+        exit(1);
+    }
+
+    FILE *bin_file = fopen(bin_filename, "wb");
+    if (bin_file == NULL) {
+        perror("Failed to open binary file");
+        fclose(txt_file);
+        exit(1);
+    }
+
+    char name[25];
+    while (fscanf(txt_file, "%24s", name) == 1) {
+        fwrite(name, sizeof(char), 25, bin_file);
+    }
+
+    fclose(txt_file);
+    fclose(bin_file);
+    printf("Successfully converted '%s' to binary '%s'.\n", txt_filename, bin_filename);
+}
+
+
+
+void read_collection(FILE *f, Passenger **arr, int *c, int *s) {
+    Passenger temp;
+
+    while (fread(&temp, sizeof(Passenger), 1, f) == 1) {
         if (*s == *c) {
             *c *= 2;
-            Passenger *temp = realloc(*arr, *c * sizeof(Passenger));
-
-            *arr = temp;
+            Passenger *temp_arr = realloc(*arr, *c * sizeof(Passenger));
+            if (temp_arr == NULL) {
+                perror("Failed to reallocate memory");
+                exit(1);
+            }
+            *arr = temp_arr;
         }
-
-        (*arr)[(*s)].i = index;
-        (*arr)[(*s)].b_count = baggage_count;
-        (*arr)[(*s)].b_mass = baggage_mass;
-
+        (*arr)[*s] = temp;
         (*s)++;
     }
 }
 
 
-void readnames(FILE *f, char ***narr, int *c, int *s){
+
+
+void readnames(FILE *f, char ***narr, int *c, int *s) {
     char name[25];
 
-    while (fscanf(f, "%24s", name) == 1) {
+    while (fread(name, sizeof(char), 25, f) == 25) {
         if (*s == *c) {
             *c *= 2;
-            *narr = realloc(*narr, *c * sizeof(char*));
+            *narr = realloc(*narr, *c * sizeof(char *));
+            if (*narr == NULL) {
+                perror("Failed to reallocate memory");
+                exit(1);
+            }
         }
 
         (*narr)[*s] = malloc(strlen(name) + 1);
+        if ((*narr)[*s] == NULL) {
+            perror("Failed to allocate memory for name");
+            exit(1);
+        }
         strcpy((*narr)[*s], name);
-
         (*s)++;
-
     }
-
 }
+
 
 
 
@@ -100,39 +156,54 @@ void free_all(Passenger *arr, char **narr, int size){
 
 
 
-int main(){
-    FILE *f1;
-    const char *filename1 = "input1111a1.txt";
-    FILE *f2;
-    const char *filename2 = "input1111a2.txt";
-    int capacity1 = 2;
-    int size1 = 0;
-    int capacity2 = 2;
-    int size2 = 0;
-    char buffer[256];
-    Passenger *p = NULL;
-    char **names = NULL;
-    double a;
+int main() {
+    const char *txt_filename1 = "input1111a1.txt";
+    const char *txt_filename2 = "input1111a2.txt";
+    const char *bin_filename1 = "input1111a1.bin";
+    const char *bin_filename2 = "input1111a2.bin";
 
-    p = (Passenger *)malloc(capacity1 * sizeof(Passenger));
-    names = (char **) malloc(capacity2 * sizeof(char*));
+    int capacity1 = 2, size1 = 0;
+    int capacity2 = 2, size2 = 0;
+    Passenger *p = malloc(capacity2 * sizeof(Passenger));
+    char **names = malloc(capacity1 * sizeof(char *));
 
-    f1 = fopen(filename1, "r");
-    f2 = fopen(filename2, "r");
+    if (p == NULL || names == NULL) {
+        perror("Allocation failed");
+        return 1;
+    }
 
-    read_collection(f2, &p, &capacity2, &size2, buffer, 256);
+
+    convert_txt_to_bin(txt_filename2, bin_filename2);
+    convert_names_to_bin(txt_filename1, bin_filename1);
+
+
+    FILE *f1 = fopen(bin_filename1, "rb");
+    FILE *f2 = fopen(bin_filename2, "rb");
+
+    if (f1 == NULL || f2 == NULL) {
+        perror("Failed to open files for reading");
+        free(p);
+        free(names);
+        return 1;
+    }
+
+
+    read_collection(f2, &p, &capacity2, &size2);
     readnames(f1, &names, &capacity1, &size1);
 
 
 //    output(p, names, size2);
+
+    double a;
     printf("Enter the value of deviation: ");
     scanf("%lf", &a);
 
     find_passenger(p, names, size1, a);
+
+
     free_all(p, names, size1);
     fclose(f1);
     fclose(f2);
 
-
-
+    return 0;
 }
