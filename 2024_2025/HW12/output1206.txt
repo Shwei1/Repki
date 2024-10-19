@@ -1,0 +1,10 @@
+log of 1 is 0 or 0.00000e+00
+log of 2 is 0.69315 or 6.93147e-01
+log of 3 is 1.0986 or 1.09861e+00
+log of 4 is 1.3863 or 1.38629e+00
+log of 5 is 1.6094 or 1.60944e+00
+log of 6 is 1.7918 or 1.79176e+00
+log of 2.7183 is 1 or 1.00000e+00
+log of -1 is undefined.
+log of 0 is undefined.
+log of 2.71 is 0.99695 or 9.96949e-01
