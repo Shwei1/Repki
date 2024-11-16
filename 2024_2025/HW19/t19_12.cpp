@@ -10,7 +10,7 @@ public:
     explicit Matrix(std::vector<std::vector<T>> vector_of_vectors): matrix(vector_of_vectors) {
         unsigned int size_row = vector_of_vectors[0].size();
         bool criterion = true;
-        for (auto row: vector_of_vectors){
+        for (const auto& row: vector_of_vectors){
             if (row.size() != size_row){
                 criterion = false;
             }
@@ -20,7 +20,7 @@ public:
         }
     }
 
-    std::vector<int> matrix_size(){
+    [[nodiscard]] std::vector<int> matrix_size() const{
         std::vector<int> m_size;
         m_size.push_back(matrix.size());
         m_size.push_back(matrix[0].size());
@@ -29,7 +29,7 @@ public:
 
 
     friend std::ostream& operator<<(std::ostream& os, const Matrix<T>& M){
-        for (auto row: M.matrix){
+        for (const auto& row: M.matrix){
             for (auto el: row){
                 os << el << ' ';
             }
@@ -68,16 +68,16 @@ public:
                 }
             }
         }
-        return result;
+        return Matrix<T>(result);
     }
 
     friend std::vector<T> operator*(const Matrix<T>& mat, const std::vector<T>& vec) {
-        if (mat.matrix_size().second != vec.size()) {
+        if (mat.matrix_size()[1] != vec.size()) {
             throw std::runtime_error("The amount of columns must be the same as the size of the vector.");
         }
 
-        size_t rows = mat.matrix_size().first;
-        size_t cols = mat.matrix_size().second;
+        size_t rows = mat.matrix_size()[0];
+        size_t cols = mat.matrix_size()[1];
 
 
         std::vector<T> result(rows, T());
@@ -91,10 +91,10 @@ public:
     }
 
     friend std::vector<T> operator*(const std::vector<T>& vec, const Matrix<T>& mat) {
-        if (vec.size() != mat.matrix_size().first) {
+        if (vec.size() != mat.matrix_size()[0]) {
             throw std::runtime_error("The amount of rows must be equal to the size of the vector.");
         }
-        size_t cols = mat.matrix_size().second;
+        size_t cols = mat.matrix_size()[1];
 
         std::vector<T> result(cols, T());
 
@@ -117,6 +117,18 @@ int main(){
     std::vector<int> resvec = M1 * myvec;
 
     for (auto coord: resvec){
-
+        std::cout << coord << ' ';
     }
+
+    std::vector<int> newvec = myvec * M1;
+
+    for (auto coord: newvec){
+        std::cout << coord << ' ';
+    }
+
+    std::vector<std::vector<double>> vov2 = {{1, 0, 2, 3}, {1.5, 7.8, 5.6, 3.334}};
+    Matrix<double> M2(vov2);
+    std::vector<std::vector<double>> vov3 = {{4.48, 2.25}, {3.7, 7.2}, {9, 9}, {5.4321, 8.2423}};
+    Matrix<double> M3(vov3);
+    std::cout << M2 * M3 << std::endl;
 }
