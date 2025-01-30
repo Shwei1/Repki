@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAX_INPUT_SIZE 20000
+#define MAX_INPUT_SIZE 100000
 
 int yield_accepted(int* heights, int desired[2], int amount){
 	int count = 0;
