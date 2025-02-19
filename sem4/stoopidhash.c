@@ -2,18 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DELETED ((char*) -1)
+#define BEST_PRIMES {5, 11, 23, 47, 97, 193, 389, 769, 1543, 3079, 6161, 12289, 24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739}
+
 typedef struct {
+
     size_t count;
     size_t size;
     
     char** keys;
     char** values;
+
 } table;
 
 unsigned int next_best_prime(unsigned int current_prime){
-    unsigned int best_primes[17] = {5, 11, 23, 47, 97, 193, 389, 769, 1543, 3072, 3079, 12289, 24593, 49157, 98317, 196613, 393241};
+    const unsigned int best_primes[] = BEST_PRIMES;
     size_t left = 0;
-    size_t right = 17;
+    size_t right = sizeof best_primes / sizeof(unsigned int) - 1;
     while(left < right){
         size_t middle = (left + right) / 2;
         if(best_primes[middle] > current_prime)
@@ -44,12 +49,13 @@ void init(table* hashtable, size_t size){
 
 void destroy(table* hashtable){
     for (int i = 0; i < hashtable->size; ++i){
-        free(hashtable->keys[i]);
-        free(hashtable->values[i]);
+        if (hashtable->keys[i] != NULL && hashtable->keys[i] != DELETED)
+            free(hashtable->keys[i]);
+        if (hashtable->values[i] != NULL) 
+            free(hashtable->values[i]);
     }
     free(hashtable->keys);
     free(hashtable->values);
-    return;
 }
 
 
@@ -65,7 +71,7 @@ unsigned int hash(char* str, unsigned int prime_base){
 
 
 void rehash(table* hashtable){
-    printf("\033[35mRehash initialised.\033[0m\n");
+    //printf("\033[35mRehash initialised.\033[0m\n");
     size_t old_size = hashtable->size;
 
     hashtable->size = next_best_prime(hashtable->size);
@@ -85,7 +91,7 @@ void rehash(table* hashtable){
     }
 
     for (unsigned int i = 0; i < old_size; ++i){
-        if (hashtable->keys[i] != NULL){
+        if (hashtable->keys[i] != NULL && hashtable->keys[i] != DELETED){
             
             unsigned int index = hash(hashtable->keys[i], hashtable->size);
 
@@ -122,8 +128,22 @@ void add_pair(table* hashtable, char* key, char* value){
     size_t valuesize = strlen(value);
     
     unsigned int index = hash(key, hashtable->size);
+    
+    if (hashtable->keys[index] != NULL && hashtable->keys[index] != DELETED && strcmp(hashtable->keys[index], key) == 0){
+        free(hashtable->values[index]);
+        hashtable->values[index] = (char*) malloc(valuesize * sizeof(char) + 1);
+        
+        if (hashtable->values[index] == NULL) {
+            printf("\033[33mMemory allocation failed at add_pair.\033[0m\n");
+            return;
+         }
 
-    if (hashtable->keys[index] == NULL){
+        strcpy(hashtable->values[index], value);
+        return;
+    }
+
+    if (hashtable->keys[index] == NULL || hashtable->keys[index] == DELETED){
+        
         hashtable->values[index] = (char*) malloc(valuesize * sizeof(char) + 1);
         hashtable->keys[index] = (char*) malloc(keysize * sizeof(char) + 1);
         
@@ -141,9 +161,19 @@ void add_pair(table* hashtable, char* key, char* value){
         int i = 1;
 
         do {
+            if (strcmp(hashtable->keys[index], key) == 0){
+                free(hashtable->values[index]);
+                hashtable->values[index] = (char*) malloc(valuesize * sizeof(char) + 1);
+                if (hashtable->values[index] == NULL) {
+                    printf("\033[33mMemory allocation failed at add_pair.\033[0m\n");
+                    return;
+                }
+                strcpy(hashtable->values[index], value);
+                return;
+            }
             index = (index + i * i) % hashtable->size;
             i++;
-        } while (hashtable->values[index] != NULL);
+        } while (hashtable->keys[index] != NULL && hashtable->keys[index] != DELETED);
         
         hashtable->keys[index] = (char*) malloc(keysize * sizeof(char) + 1);
         hashtable->values[index] = (char*) malloc(valuesize * sizeof(char) + 1);
@@ -155,7 +185,7 @@ void add_pair(table* hashtable, char* key, char* value){
 
             strcpy(hashtable->keys[index], key);
             strcpy(hashtable->values[index], value);
-
+            hashtable->count++;
     }
 
     return;
@@ -167,40 +197,63 @@ char* get_value(table* hashtable, char* key){
     int i = 1;
 
     do {
-        if (hashtable->keys[index] != NULL && strcmp(hashtable->keys[index], key) == 0){
+        if (hashtable->keys[index] != NULL && hashtable->keys[index] != DELETED && strcmp(hashtable->keys[index], key) == 0){
                     return hashtable->values[index];
                 }
         index = (index + i * i) % hashtable->size;
+        i++;
     } while(hashtable->keys[index] != NULL); 
 
     return NULL;
 }  
 
+void del_key(table* hashtable, char* key){
+    unsigned int index = hash(key, hashtable->size);
+    
+    int i = 1;
+
+    do {
+        if (hashtable->keys[index] != NULL && hashtable->keys[index] != DELETED && strcmp(key, hashtable->keys[index]) == 0){
+            free(hashtable->keys[index]);
+            free(hashtable->values[index]);
+            hashtable->keys[index] = DELETED;
+            hashtable->values[index] = NULL;
+            hashtable->count--;
+            return;
+        }
+        index = (index + i * i) % hashtable->size;
+        i++;
+
+    } while(hashtable->keys[index] != NULL);
+
+    return;
+}
+
 
 int main(void){
     table my_table;
     init(&my_table, 5);
-    
+
     add_pair(&my_table, "Quatrevingt-treize", "Victor Hugo");
     char* author1 = get_value(&my_table, "Quatrevingt-treize");
     printf("The author of \033[32m\"Quatrevingt-treize\"\033[0m is %s, as per my hashtable!\n", author1);
-    
+
     add_pair(&my_table, "At the Mountains of Madness", "Howard Lovecraft");
-    char* author2 = get_value(&my_table, "At the Mountains of Madness"); 
-    printf("The author of \033[32m\"At the Mountains of Madness\"\033[0m is %s, as per my hashtable!\n", author2); 
-    
-    add_pair(&my_table, "Black Council", "Panteleymon Kulish");  
+    char* author2 = get_value(&my_table, "At the Mountains of Madness");
+    printf("The author of \033[32m\"At the Mountains of Madness\"\033[0m is %s, as per my hashtable!\n", author2);
+
+    add_pair(&my_table, "Black Council", "Panteleymon Kulish");
     char* author3 = get_value(&my_table, "Black Council");
-    printf("The author of \033[32m\"Black Council\"\033[0m is %s, as per my hashtable!\n", author3); 
+    printf("The author of \033[32m\"Black Council\"\033[0m is %s, as per my hashtable!\n", author3);
 
     add_pair(&my_table, "Being and Time", "Martin Heidegger");
     char* author4 = get_value(&my_table, "Being and Time");
-    printf("The author of \033[32m\"Being and Time\"\033[0m is %s, as per my hashtable!\n", author4); 
-  
+    printf("The author of \033[32m\"Being and Time\"\033[0m is %s, as per my hashtable!\n", author4);
+
     add_pair(&my_table, "Faust", "Wolfgang Goethe");
     char* author5 = get_value(&my_table, "Faust");
-    printf("The author of \033[32m\"Faust\"\033[0m is %s, as per my hashtable!\n", author5); 
-    
+    printf("The author of \033[32m\"Faust\"\033[0m is %s, as per my hashtable!\n", author5);
+
     destroy(&my_table);
 
     return 0;
