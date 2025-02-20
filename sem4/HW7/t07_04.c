@@ -1,19 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define DELETED ((char*) -1)
+#define PLACEHOLDER "PLACEHOLDER"
+#define PRESENT "PRESENT"
 #define BEST_PRIMES {5, 11, 23, 47, 97, 193, 389, 769, 1543, 3079, 6161, 12289, 24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739}
+#define OKAYANSWER "Everything is going to be OK."
+#define UNKNOWNANSWER "Some words from the text are unknown."
+#define NOTPERFECTANSWER "The usage of the vocabulary is not perfect."
+#define WORDSIZE 20
+
 
 typedef struct {
 
     size_t count;
     size_t size;
-    
+
     char** keys;
     char** values;
 
 } table;
+
 
 unsigned int next_best_prime(unsigned int current_prime){
     const unsigned int best_primes[] = BEST_PRIMES;
@@ -26,7 +35,6 @@ unsigned int next_best_prime(unsigned int current_prime){
         else
             left = middle + 1;
     }
-
     return best_primes[left + 1];
 }
 
@@ -46,6 +54,7 @@ void init(table* hashtable, size_t size){
     }
     return;
 }
+
 
 void destroy(table* hashtable){
     for (int i = 0; i < hashtable->size; ++i){
@@ -71,7 +80,6 @@ unsigned int hash(char* str, unsigned int prime_base){
 
 
 void rehash(table* hashtable){
-    //printf("\033[35mRehash initialised.\033[0m\n");
     size_t old_size = hashtable->size;
 
     hashtable->size = next_best_prime(hashtable->size);
@@ -84,7 +92,6 @@ void rehash(table* hashtable){
         return;
     }
 
-
     for (unsigned int i = 0; i < hashtable->size; ++i){
         new_keys[i] = NULL;
         new_values[i] = NULL;
@@ -94,8 +101,7 @@ void rehash(table* hashtable){
         if (hashtable->keys[i] != NULL && hashtable->keys[i] != DELETED){
             
             unsigned int index = hash(hashtable->keys[i], hashtable->size);
-
-
+            
             if (new_keys[index] != NULL) {
                 int j = 1;
                 do {
@@ -104,12 +110,11 @@ void rehash(table* hashtable){
                 } while (new_keys[index] != NULL);
              
             }
-        
             new_keys[index] = hashtable->keys[i];
             new_values[index] = hashtable->values[i];
-
         }
-    }    
+    } 
+
     free(hashtable->keys);
     free(hashtable->values);
 
@@ -231,30 +236,62 @@ void del_key(table* hashtable, char* key){
 
 
 int main(void){
-    table my_table;
-    init(&my_table, 5);
 
-    add_pair(&my_table, "Quatrevingt-treize", "Victor Hugo");
-    char* author1 = get_value(&my_table, "Quatrevingt-treize");
-    printf("The author of \033[32m\"Quatrevingt-treize\"\033[0m is %s, as per my hashtable!\n", author1);
+    const char punct[] = " .,:;'\"-!?";
 
-    add_pair(&my_table, "At the Mountains of Madness", "Howard Lovecraft");
-    char* author2 = get_value(&my_table, "At the Mountains of Madness");
-    printf("The author of \033[32m\"At the Mountains of Madness\"\033[0m is %s, as per my hashtable!\n", author2);
+    int N, M;
 
-    add_pair(&my_table, "Black Council", "Panteleymon Kulish");
-    char* author3 = get_value(&my_table, "Black Council");
-    printf("The author of \033[32m\"Black Council\"\033[0m is %s, as per my hashtable!\n", author3);
+    scanf("%d %d", &N, &M);
 
-    add_pair(&my_table, "Being and Time", "Martin Heidegger");
-    char* author4 = get_value(&my_table, "Being and Time");
-    printf("The author of \033[32m\"Being and Time\"\033[0m is %s, as per my hashtable!\n", author4);
+    table dict;
+    init(&dict, 389);
 
-    add_pair(&my_table, "Faust", "Wolfgang Goethe");
-    char* author5 = get_value(&my_table, "Faust");
-    printf("The author of \033[32m\"Faust\"\033[0m is %s, as per my hashtable!\n", author5);
+    for (int i = 0; i < N; i++){
+        char buffer[WORDSIZE + 1];
+        scanf("%20s", buffer);
+        add_pair(&dict, buffer, PLACEHOLDER);
+    }
 
-    destroy(&my_table);
+    getchar();
 
+    for (int j = 0; j < M; j++){
+        char buffer[4096];
+        if (fgets(buffer, 4096, stdin) == NULL) {
+            break;  
+        }
+
+        buffer[strcspn(buffer, "\n")] = '\0';
+
+        char* token = strtok(buffer, punct);
+
+        while(token != NULL){
+            for (int j = 0; token[j] != '\0'; j++) {
+                token[j] = tolower((unsigned char)token[j]);
+            }
+
+            if (get_value(&dict, token)){
+                add_pair(&dict, token, PRESENT);
+            }
+            else {
+                printf(UNKNOWNANSWER);
+                destroy(&dict);
+                return 0;
+            }
+
+            token = strtok(NULL, punct);
+        }
+
+    }
+
+    for (int i = 0; i < dict.size; i++){
+        if(dict.values[i] != NULL && strcmp(dict.values[i], PLACEHOLDER) == 0){
+             printf(NOTPERFECTANSWER);
+             destroy(&dict);
+             return 0;
+        }
+    }
+
+    printf(OKAYANSWER);
+    destroy(&dict);
     return 0;
 }
