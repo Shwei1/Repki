@@ -138,7 +138,11 @@ init(&my_table, T_counts);
     else {
         printf("YES %ld", best_prefix);
     }
-    
+
+    for (int i = 0; i < n; i++){
+        free(words[i]);
+    }
+
 free(words);
 free(T);
 destroy(&my_table);
