@@ -91,7 +91,7 @@ int main(void){
         for (size_t j = 0; j < subordinate_count; j++){
             size_t subordinate_index;
             scanf("%zu", &subordinate_index);
-            ministers[i].indices[j] = subordinate_index - 1; // f*ck one-indexed input
+            ministers[i].indices[j] = subordinate_index - 1; 
         }
     }
 
