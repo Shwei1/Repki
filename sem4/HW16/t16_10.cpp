@@ -4,6 +4,12 @@
 #include <vector>
 #include <unordered_map>
 
+struct Node {
+    int id;
+    Node* parent;
+    std::vector<Node*> children;
+};
+
 /*  Тут імплементується тупий перебір по всіх модифікаціях. Суть така:
     ізоморфізм дерев показуємо через зведення до канонічного виду, тобто
     строки дужок. Далі для кожної модифікації співставляємо її канонічний
@@ -13,10 +19,10 @@
     по часу надто повільно, але я вважаю це вже перемога.
 */
 
-std::string encode(int u, const std::vector<std::vector<int>>& children) {
+std::string encode(Node* node) {
     std::string s = "(";
-    for (int v : children[u]) {
-        s += encode(v, children);
+    for (Node* child : node->children) {
+        s += encode(child);
     }
     s += ")";
     return s;
@@ -26,48 +32,57 @@ int main(){
     int N, M;
     std::cin >> N >> M;
 
-    std::vector<std::vector<int>> children(N+1);
-    std::vector<int> parent(N+1, 0);
+    std::vector<Node*> nodes(N + 1, nullptr);
+    for (int i = 1; i <= N; i++){
+        nodes[i] = new Node{i, nullptr, {}};
+    }
 
-    for(int i = 1; i <= N; i++){
+    for (int i = 1; i <= N; i++){
         int K;
         std::cin >> K;
-
         for (int j = 0; j < K; j++){
-            int v;
-            std::cin >> v;
-            children[i].push_back(v);
-            parent[v] = i;
+            int child_id;
+            std::cin >> child_id;
+            nodes[i]->children.push_back(nodes[child_id]);
+            nodes[child_id]->parent = nodes[i];
         }
     }
 
     std::unordered_map<std::string,int> table;
-    table.reserve(M+1);
+    table.reserve(M + 1);
 
-    std::string s0 = encode(1, children);
+    std::string s0 = encode(nodes[1]);
     table[s0] = 0;
 
     for (int j = 1; j <= M; j++){
         int S, F;
         std::cin >> S >> F;
+        Node* snode = nodes[S];
+        Node* fnode = nodes[F];
+        Node* parent = snode->parent;
 
-        int P = parent[S];
-        auto& siblings = children[P];
-        siblings.erase(std::find(siblings.begin(), siblings.end(), S));
+        auto& siblings = parent->children;
+        siblings.erase(std::remove(siblings.begin(), siblings.end(), snode), siblings.end());
 
-        children[F].push_back(S);
-        parent[S] = F;
+        fnode->children.push_back(snode);
+        snode->parent = fnode;
 
-        std::string sj = encode(1, children);
+        std::string sj = encode(nodes[1]);
 
-        auto it = table.find(sj);
-        if(it != table.end()){
-            std::cout << it->second << " " << j << std::endl;
+        if (table.find(sj) != table.end()){
+            std::cout << table[sj] << " " << j << std::endl;
             return 0;
         }
+    
         table[sj] = j;
     }
 
     std::cout << -1 << std::endl;
+
+    for (int i = 1; i <= N; i++){
+        delete nodes[i];
+    }
+
     return 0;
 }
+
