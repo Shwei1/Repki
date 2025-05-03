@@ -170,8 +170,6 @@ void demote(graph *base, int user_id){
     queue q; init_queue(&q, base->size);
     bool *in_queue = calloc(base->size, sizeof(bool));
 
-    // start from X’s direct subordinates (but only if X is sharing; if X isn't sharing
-    // no one below could ever have inherited *from* X in the first place)
     if (base->sharing[user_id-1]) {
         for (size_t i = 0; i < base->vertices[user_id-1].count; i++){
             int sub = base->vertices[user_id-1].arr[i];
