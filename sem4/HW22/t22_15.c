@@ -3,8 +3,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define PROMOTED 1
-#define OPERATOR 2
+static inline int fast_int(void) {
+  int c = getchar_unlocked(), x = 0;
+  while (c < '0') c = getchar_unlocked();
+  for (; c >= '0'; c = getchar_unlocked())
+    x = x*10 + (c - '0');
+  return x;
+}
 
 typedef struct vect{
     size_t size;
@@ -105,141 +110,69 @@ void destroy_queue(queue *self){
 
 typedef struct graph{
     size_t size;
-    int *rights;
     vect *vertices;
-    vect *covertices;
+    bool *is_op;
+    bool *rights;
     bool *sharing;
     void (*add_vertex)(struct graph *, int, int);
 } graph;
 
 void add_vertex_(graph *self, int u, int v){
     vect *wherefrom = &self->vertices[u-1];
-    vect *whereto = &self->covertices[v-1];
     wherefrom->push_back(wherefrom, v);
-    whereto->push_back(whereto, u);
 }
 
 void init_graph(graph *self, size_t n){
     self->size = n;
     self->vertices = malloc(n * sizeof(vect));
-    self->covertices = malloc(n * sizeof(vect));
 
     for (size_t i = 0; i < n; i++){
-        init_vect(&self->vertices[i], n);
-        init_vect(&self->covertices[i], n);
+        init_vect(&self->vertices[i], 4);
     }
     self->add_vertex = add_vertex_;
-    self->rights = calloc(n, sizeof(int));
+    self->is_op = calloc(n, sizeof(bool));
+    self->rights = calloc(n, sizeof(bool));
     self->sharing = calloc(n, sizeof(bool));
 }
 
 void destroy_graph(graph *self){
     for (size_t i = 0; i < self->size; i++){
         destroy_vect(&self->vertices[i]);
-        destroy_vect(&self->covertices[i]);
     }
     free(self->vertices);
-    free(self->covertices);
-    free(self->rights);
+    free(self->is_op);
     free(self->sharing);
+    free(self->rights);
 }
 
 void promote(graph *base, int user_id){
-    base->rights[user_id-1] = OPERATOR;
-
-    if (base->sharing[user_id-1]){
-        for (size_t i = 0; i < base->vertices[user_id-1].count; i++){
-            if (base->rights[base->vertices[user_id-1].arr[i]-1] != OPERATOR){
-                base->rights[base->vertices[user_id-1].arr[i]-1] = PROMOTED;
-            }
-        }
-    }
+    base->is_op[user_id-1] = true;
 }
 
 void demote(graph *base, int user_id){
-    base->rights[user_id-1] = 0;
-
-    for (size_t j = 0; j < base->covertices[user_id-1].count; j++){
-        int boss = base->covertices[user_id-1].arr[j];
-        if (base->rights[boss - 1] && base->sharing[boss-1]){
-            base->rights[user_id-1] = PROMOTED;
-            break;
-        }
-    }
-
-    queue q; init_queue(&q, base->size);
-    bool *in_queue = calloc(base->size, sizeof(bool));
-
-    if (base->sharing[user_id-1]) {
-        for (size_t i = 0; i < base->vertices[user_id-1].count; i++){
-            int sub = base->vertices[user_id-1].arr[i];
-            q.push_back(&q, sub);
-            in_queue[sub-1] = true;
-        }
-    }
-
-    while (q.count){
-        int curr = q.pop_front(&q);
-
-        if (base->rights[curr-1] == OPERATOR)
-            continue;
-
-
-        bool has_source = false;
-        for (size_t k = 0; k < base->covertices[curr-1].count; k++){
-            int boss = base->covertices[curr-1].arr[k];
-            if (base->rights[boss-1] && base->sharing[boss-1]){
-                has_source = true;
-                break;
-            }
-        }
-
-        if (!has_source){
-            base->rights[curr-1] = 0;
-            if (base->sharing[curr-1]) {
-                for (size_t m = 0; m < base->vertices[curr-1].count; m++){
-                    int sub2 = base->vertices[curr-1].arr[m];
-                    if (!in_queue[sub2-1]){
-                        q.push_back(&q, sub2);
-                        in_queue[sub2-1] = true;
-                    }
-                }
-            }
-        }
-    }
-
-    destroy_queue(&q);
-    free(in_queue);
+    base->is_op[user_id-1] = false;
 }
 
 void promote_subjugates(graph *base, int user_id){
     base->sharing[user_id-1] = true;
-    for (size_t i = 0; i < base->vertices[user_id - 1].count; i++){
-        int curr = base->vertices[user_id - 1].arr[i];
-        if (base->rights[curr-1] != OPERATOR)
-            base->rights[curr-1] = PROMOTED;
-    }
 }
 
 void promote_down(graph *base, int user_id){
-
+    base->sharing[user_id-1] = true;
+    vect stk; init_vect(&stk, base->size / 2);
     bool *visited = calloc(base->size, sizeof(bool));
-    visited[user_id-1] = true;
-
-    vect stk; init_vect(&stk, base->size);
     stk.push_back(&stk, user_id);
+    visited[user_id-1] = true;
 
     while (stk.count){
         int curr = stk.pop_back(&stk);
 
-        base->sharing[curr-1] = true;
-
         for (size_t i = 0; i < base->vertices[curr-1].count; i++){
-            if (!visited[base->vertices[curr-1].arr[i] - 1]){
-                visited[base->vertices[curr-1].arr[i] - 1] = true;
-                stk.push_back(&stk, base->vertices[curr-1].arr[i]);
-                if (base->rights[base->vertices[curr-1].arr[i] - 1] != OPERATOR)
-                    base->rights[base->vertices[curr-1].arr[i] - 1] = PROMOTED;
+            int subjugate = base->vertices[curr-1].arr[i];
+            if (!visited[subjugate-1]){
+                visited[subjugate-1] = true;
+                base->sharing[subjugate-1] = true;
+                stk.push_back(&stk, subjugate);
             }
         }
     }
@@ -250,53 +183,40 @@ void promote_down(graph *base, int user_id){
 
 void demote_subjugates(graph *base, int user_id){
     base->sharing[user_id-1] = false;
+}
 
+void determine_rights(graph *base){
     queue q; init_queue(&q, base->size);
     bool *in_queue = calloc(base->size, sizeof(bool));
 
-    for (size_t i = 0; i < base->vertices[user_id-1].count; i++){
-        q.push_back(&q, base->vertices[user_id-1].arr[i]);
-        in_queue[base->vertices[user_id-1].arr[i]-1] = true;
+    for (size_t i = 0; i < base->size; i++){
+        if (base->is_op[i]){
+            q.push_back(&q, i+1);
+            base->rights[i] = true;
+            in_queue[i] = true;
+        }
     }
 
     while (q.count){
         int curr = q.pop_front(&q);
 
-        if (base->rights[curr-1] == OPERATOR)
+        if (!base->sharing[curr-1])
             continue;
 
-        bool accepts = false;
-        for (size_t j = 0; j < base->covertices[curr-1].count; j++){
-            int boss = base->covertices[curr-1].arr[j];
-            if (base->rights[boss-1] && base->sharing[boss-1]){
-                accepts = true;
-                break;
-            }
-        }
-
-        if (!accepts){
-                base->rights[curr-1] = 0;
-                for (size_t k = 0; k < base->vertices[curr-1].count; k++){
-                    int subjugate = base->vertices[curr-1].arr[k];
-                    if (!in_queue[subjugate-1]){
-                        q.push_back(&q, subjugate);
-                        in_queue[subjugate-1] = true;
-                    }
+        if (base->rights[curr-1]){
+            for (size_t j = 0; j < base->vertices[curr-1].count; j++){
+                int subjugate = base->vertices[curr-1].arr[j];
+                if (!in_queue[subjugate - 1]){
+                    base->rights[subjugate - 1] = true;
+                    q.push_back(&q, subjugate);
+                    in_queue[subjugate-1] = true;
                 }
             }
+        }
     }
     free(in_queue);
     destroy_queue(&q);
 }
-
-
-void __print_rights(graph *base){
-    for (size_t j = 0; j < base->size; j++){
-        printf("%d ", base->rights[j]);
-    }
-    printf("\n");
-}
-
 
 int main(void){
     size_t N, M;
@@ -313,44 +233,39 @@ int main(void){
     size_t K;
     scanf("%zu", &K);
 
-    // chroot :)
-
     for (size_t i = 0; i < K; i++){
-        int T, X;
-        scanf("%d %d", &T, &X);
+        int T = fast_int();
+        int X = fast_int();
+        // scanf("%d %d", &T, &X);
 
         switch (T) {
             case 1:
                 promote(&base, X);
-                // __print_rights(&base);
                 break;
             case 2:
                 demote(&base, X);
-                // __print_rights(&base);
                 break;
             case 3:
                 promote_subjugates(&base, X);
-                // __print_rights(&base);
                 break;
             case 4:
                 promote_down(&base, X);
-                // __print_rights(&base);
                 break;
             case 5:
                 demote_subjugates(&base, X);
-                // __print_rights(&base);
                 break;
             default:
                 break;
         }
     }
 
+    determine_rights(&base);
+
     for (size_t j = 0; j < N; j++){
-        int right = base.rights[j] ? 1 : 0;
+        int right = base.rights[j];
         printf("%d ", right);
     }
 
     destroy_graph(&base);
     return 0;
 }
-
