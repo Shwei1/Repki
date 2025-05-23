@@ -140,7 +140,7 @@ int dijkstra(const Graph& gph, int s, int f) {
 
     while (!pq.empty()) {
         auto curr = pq.pop_min();
-        std::cout << "Current: " << curr.first+1 << " with weight " << curr.second << std::endl;
+//        std::cout << "Current: " << curr.first+1 << " with weight " << curr.second << std::endl;
         int u = curr.first;
 
         // if (curr.second > dist[u]) continue;
@@ -149,7 +149,7 @@ int dijkstra(const Graph& gph, int s, int f) {
             int v = edge.first;
             int w = edge.second;
 
-            std::cout << '\t' << v+1 << ' ' << w << '\n';
+  //          std::cout << '\t' << v+1 << ' ' << w << '\n';
 
             if (dist[v] > dist[u] + w) {
                 dist[v] = dist[u] + w;
