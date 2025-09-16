@@ -7,11 +7,18 @@ public class B02_17 {
         double a = 1.0d;
         int k = 0;
         double result = 0;
+        double xPow = 1;
+        int signum = 1;
+
+        if (Math.abs(x) >= 1.0d)
+            throw new IllegalArgumentException("Ряд не збігається для |x|>=1.");
 
         while(Math.abs(a) > epsilon){
-            a = Math.pow(-1, k) * (1+k) * Math.pow(x, k);
+            a = signum * (1+k) * xPow;
             result += a;
             k++;
+            signum *= -1;
+            xPow *= x;
         }
 
         return result;
