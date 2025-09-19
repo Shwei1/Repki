@@ -36,6 +36,22 @@ public class Customer implements Comparable<Customer> {
         return bankAccountNumber;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public void setCreditCardNumber(int n){
+        this.creditCardNumber = n;
+    }
+
+    public void setBankAccountNumber(int n){
+        this.bankAccountNumber = n;
+    }
+
     @Override
     public String toString(){
         return "Customer: " + name + " " + address + " " + creditCardNumber + " " + bankAccountNumber;
