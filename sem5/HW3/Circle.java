@@ -21,6 +21,10 @@ public class Circle {
         return "Circle with centre (" + x + "," + y + ") and radius " + radius;
     }
 
+    public boolean equals(Circle other){
+        return x == other.x && y == other.y && radius == other.radius;
+    }
+
     public double area(){
         return Math.PI * radius * radius;
     }
