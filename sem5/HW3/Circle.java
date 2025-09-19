@@ -8,6 +8,16 @@ public class Circle {
         this.radius = r;
     }
 
+    public Circle(Circle other){
+        this.x = other.x;
+        this.y = other.y;
+        this.radius = other.radius;
+    }
+
+    public Circle(){
+        x = y = radius = 0;
+    }
+
     public static double euclideanDistance(double x1, double y1, double x2, double y2){
         return Math.sqrt((x1-x2) * (x1-x2) + (y1-y2)*(y1-y2));
     }
