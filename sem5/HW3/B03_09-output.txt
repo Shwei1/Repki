@@ -1,0 +1,3 @@
+[Customer: Potuzhny Evhen Mykolayovych C street 2000 17, Customer: Zhi Quangxi Lee B street 1500 16, Customer: Borman Volodymyr Borysovych C++ street 1750 18, Customer: Zubenko Valeriy Albertovych A street 1000 15]
+[Customer: Borman Volodymyr Borysovych C++ street 1750 18, Customer: Potuzhny Evhen Mykolayovych C street 2000 17, Customer: Zhi Quangxi Lee B street 1500 16, Customer: Zubenko Valeriy Albertovych A street 1000 15]
+Customers with card numbers in range [1001, 1999]: [Customer: Borman Volodymyr Borysovych C++ street 1750 18, Customer: Zhi Quangxi Lee B street 1500 16]

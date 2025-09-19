@@ -1,0 +1,34 @@
+New circle with area 73.2781823290166
+New circle with area 228.6936311679358
+New circle with area 162.38256567615423
+New circle with area 9.756756713642064
+New circle with area 5.947564767894217
+New circle with area 258.3876820177535
+New circle with area 98.58805813886741
+New circle with area 0.3287422013776153
+New circle with area 250.12078841556527
+New circle with area 62.90622081229331
+Circle 0 intersects Circle 2
+Circle 0 intersects Circle 5
+Circle 0 intersects Circle 6
+Circle 0 intersects Circle 9
+Circle 1 intersects Circle 2
+Circle 1 intersects Circle 3
+Circle 1 intersects Circle 5
+Circle 1 intersects Circle 6
+Circle 1 intersects Circle 8
+Circle 1 intersects Circle 9
+Circle 2 intersects Circle 4
+Circle 2 intersects Circle 6
+Circle 2 intersects Circle 8
+Circle 2 intersects Circle 9
+Circle 3 intersects Circle 8
+Circle 5 intersects Circle 6
+Circle 5 intersects Circle 8
+Circle 5 intersects Circle 9
+Circle 6 intersects Circle 7
+Circle 6 intersects Circle 8
+Circle 6 intersects Circle 9
+Circle 7 intersects Circle 9
+[Circle with centre (5.57827397297071,2.3889143238731636) and radius 4.829613843456259, Circle with centre (7.114396770963251,4.884992125492673) and radius 8.532024596074688, Circle with centre (2.020712003612253,6.162892357476916) and radius 7.189435026384797, Circle with centre (1.0213252566119202,9.947243013247341) and radius 1.7622917235924196, Circle with centre (6.679887060321981,1.598650842727849) and radius 1.3759246579442974, Circle with centre (1.1143892434677294,5.148282086747739) and radius 9.069032674677306, Circle with centre (3.176825774836103,8.627205505032334) and radius 5.601924094921657, Circle with centre (6.4156030630116545,4.418124254542396) and radius 0.3234839914189225, Circle with centre (7.779593025305313,3.094410402894896) and radius 8.92277533577746, Circle with centre (9.234913501520971,0.6309315447154773) and radius 4.474781780937869]
+The largest circle is: Circle with centre (1.1143892434677294,5.148282086747739) and radius 9.069032674677306
