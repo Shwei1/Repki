@@ -1,7 +1,7 @@
 public class Liberica extends Coffee {
 
     @Override
-    private double calculatePrice(){
+    protected double calculatePrice(){
        return weight * 0.979;
     }
 

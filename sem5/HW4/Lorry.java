@@ -1,4 +1,6 @@
-public class Lorry<T> {
+import java.util.Arrays;
+
+public class Lorry<T extends Coffee> {
 
     private int load = 0;
     private T[] cargo; 
@@ -8,6 +10,7 @@ public class Lorry<T> {
         for (var element: cargo){
             result += element.getWeight();
         }
+        return result;
     }
 
     public Lorry(T[] arr){
@@ -27,4 +30,7 @@ public class Lorry<T> {
         Arrays.sort(cargo);
     }
 
+    public Coffee[] findCargoWithStrengthInInterval(int a, int b){
+        return Coffee.findCoffeeWithStrengthInInterval(cargo, a, b);
+    } 
 }
