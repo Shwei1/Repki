@@ -11,7 +11,7 @@ record Country(String name, int area, String continent){}
 public class B05_09 {
 
     public static void findCountriesWithAreaNotGreaterThanGiven(String ifile,
-                                                    String ofile, int area){
+                                                    String ofile, int area) throws FileNotFoundException, IOException{
         FileReader fr = new FileReader(ifile);
         FileWriter fw = new FileWriter(ofile);
         PrintWriter pw = new PrintWriter(fw);
@@ -19,7 +19,7 @@ public class B05_09 {
 
         ArrayList<Country> result = new ArrayList<Country>();
 
-        while (sc.hasNextLine()) {
+        while (sc.hasNext()) {
             String name = sc.next();
             int curr_area = sc.nextInt();
             String continent = sc.next();
@@ -29,13 +29,13 @@ public class B05_09 {
         }
 
         pw.print(result);
+        pw.close();
         fr.close();
         sc.close();
         fw.close();
-        pw.close();
     }
 
-    public static void countCountriesInContinents(String ifile, String ofile){
+    public static void countCountriesInContinents(String ifile, String ofile) throws FileNotFoundException, IOException{
 
         FileReader fr = new FileReader(ifile);
         FileWriter fw = new FileWriter(ofile);
@@ -44,7 +44,7 @@ public class B05_09 {
 
         Map<String, Integer> counts = new HashMap<>();
 
-        while (sc.hasNextLine()) {
+        while (sc.hasNext()) {
             String name = sc.next();
             int area = sc.nextInt();
             String continent = sc.next();
@@ -55,16 +55,19 @@ public class B05_09 {
         pw.print(counts);
         fr.close();
         sc.close();
-        fw.close();
+        fw.close(); 
         pw.close();
     }
 
     public static void main(String[] args){
-
+        
+        try {
          findCountriesWithAreaNotGreaterThanGiven(
                  "B05_09-input.txt", "B05_09-output1.txt", 600000
                  );
-
          countCountriesInContinents("B05_09-input.txt", "B05_09-output2.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

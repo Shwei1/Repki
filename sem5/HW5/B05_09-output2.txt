@@ -1,0 +1,1 @@
+{Asia=11, Europe=4, Africa=10, SouthAmerica=4, NorthAmerica=4, Oceania=1}
