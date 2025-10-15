@@ -1,0 +1,12 @@
+Expression "+2 - 57*33 + 25/ - 4    " is valid: true
+Expression "+2 - 57*33 + 25/ - 4+" is valid: false
+Expression "2 - 5733 + 25/ - 4+" is valid: false
+Expression "2 - 5733 + 25/-4" is valid: true
+Expression "24" is valid: false
+Expression "24 + 23" is valid: true
+Expression "24 + 23 / 4 - 4" is valid: true
+Expression "24 + 23             / 4 - 4                " is valid: true
+Expression "*24 + 23 " is valid: false
+Expression "-24 + 23 " is valid: true
+Expression "-24 + 23 /" is valid: false
+Expression "-24 + g23" is valid: false
