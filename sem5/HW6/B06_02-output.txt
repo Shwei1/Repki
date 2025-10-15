@@ -1,0 +1,16 @@
+Received input: +380669757-165
+Found phone numbers:
+
++380669757-165
+
+Received input: 0(77)53-83535
+Found phone numbers:
+
+0(77)53-83535
+
+Received input: Omnishominesquisese077-96-75-333studentpraestare+1(4567)-23-54-ceterisanimalibus
+Found phone numbers:
+
+077-96-75-333
++1(4567)-23-54
+
