@@ -4,17 +4,31 @@ public class Toy implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
+    private double price;
     private int minimumAge;
     private int maximumAge;
 
+    public Toy(String name, double price, int minimumAge, int maximumAge){
+        this.name = name;
+        this.price = price;
+        this.minimumAge = minimumAge;
+        this.maximumAge = maximumAge;
+    }
+
+
     public Toy(String name, int minimumAge, int maximumAge){
         this.name = name;
+        this.price = Double.NaN;
         this.minimumAge = minimumAge;
         this.maximumAge = maximumAge;
     }
 
     public String getName(){
         return name;
+    }
+
+    public double getPrice(){
+        return price;
     }
 
     public int getMinimumAge(){
@@ -35,6 +49,10 @@ public class Toy implements Serializable {
 
      public void setMaximumAge(int age){
         this.maximumAge = age;
+    }
+
+    public void setPrice(double price){
+        this.price = price;
     }
     
     @Override
