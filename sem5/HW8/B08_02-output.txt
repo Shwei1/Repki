@@ -1,0 +1,3 @@
+Is string "()(){[]}" valid: true
+Is string "()}}{{" valid: false
+Is string "" valid: true
