@@ -1,0 +1,12 @@
+[  2,02]: Itur ad Herculeas gelidi qua Tiburis arces
+[  7,03]: Canaque sulphureis Albula fumat aquis,
+[ 12,03]: Rura nemusque sacrum dilectaque iugera Musis
+[ 17,04]: Signat vicina quartus ab urbe lapis.
+[ 22,04]: Hic rudis aestivas praestabat porticus umbras,
+[ 27,05]: Heu quam paene novum porticus ausa nefas!
+[ 32,05]: Nam subito conlapsa ruit, cum mole sub illa
+[ 37,06]: Gestatus biiugis Regulus esset equis.
+[ 42,06]: Nimirum timuit nostras Fortuna querellas,
+[ 47,07]: Quae par tam magnae non erat invidiae.
+[ 52,07]: Nunc et damna iuvant; sunt ipsa pericula tanti:
+[ 57,08]: Stantia non poterant tecta probare deos.
