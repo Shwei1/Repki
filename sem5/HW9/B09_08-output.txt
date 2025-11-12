@@ -1,0 +1,104 @@
+Cooks available: 1
+[0,00 Customer 3]:  has arrived
+[0,03 Customer 3]:  order brought to the cook
+[0,09 Customer 5]:  has arrived
+[0,14 Customer 4]:  has arrived
+[0,43 Customer 1]:  has arrived
+[0,46 Customer 6]:  has arrived
+[0,78 Customer 7]:  has arrived
+[0,90 Customer 2]:  has arrived
+[0,97 Customer 0]:  has arrived
+[3,96 Customer 3]:  has been served
+[3,96 Customer 5]:  order brought to the cook
+[7,37 Customer 5]:  has been served
+[7,37 Customer 4]:  order brought to the cook
+[11,29 Customer 4]:  has been served
+[11,29 Customer 1]:  order brought to the cook
+[14,97 Customer 1]:  has been served
+[14,97 Customer 6]:  order brought to the cook
+[18,70 Customer 6]:  has been served
+[18,70 Customer 7]:  order brought to the cook
+[22,40 Customer 7]:  has been served
+[22,40 Customer 2]:  order brought to the cook
+[26,00 Customer 2]:  has been served
+[26,00 Customer 0]:  order brought to the cook
+[29,96 Customer 0]:  has been served
+Total customers: 8, served in time: 1
+Cooks available: 2
+[0,00 Customer 7]:  has arrived
+[0,02 Customer 7]:  order brought to the cook
+[0,01 Customer 2]:  has arrived
+[0,03 Customer 2]:  order brought to the cook
+[0,31 Customer 4]:  has arrived
+[0,32 Customer 1]:  has arrived
+[0,35 Customer 0]:  has arrived
+[0,65 Customer 5]:  has arrived
+[0,68 Customer 3]:  has arrived
+[0,92 Customer 6]:  has arrived
+[3,55 Customer 7]:  has been served
+[3,55 Customer 4]:  order brought to the cook
+[3,65 Customer 2]:  has been served
+[3,65 Customer 1]:  order brought to the cook
+[6,64 Customer 4]:  has been served
+[6,64 Customer 0]:  order brought to the cook
+[7,53 Customer 1]:  has been served
+[7,53 Customer 5]:  order brought to the cook
+[10,32 Customer 0]:  has been served
+[10,32 Customer 3]:  order brought to the cook
+[11,15 Customer 5]:  has been served
+[11,15 Customer 6]:  order brought to the cook
+[14,12 Customer 3]:  has been served
+[15,02 Customer 6]:  has been served
+Total customers: 8, served in time: 4
+Cooks available: 3
+[0,00 Customer 1]:  has arrived
+[0,02 Customer 1]:  order brought to the cook
+[0,06 Customer 2]:  has arrived
+[0,06 Customer 2]:  order brought to the cook
+[0,11 Customer 3]:  has arrived
+[0,11 Customer 3]:  order brought to the cook
+[0,12 Customer 6]:  has arrived
+[0,49 Customer 7]:  has arrived
+[0,56 Customer 4]:  has arrived
+[0,70 Customer 0]:  has arrived
+[0,83 Customer 5]:  has arrived
+[3,10 Customer 1]:  has been served
+[3,10 Customer 6]:  order brought to the cook
+[3,81 Customer 3]:  has been served
+[3,81 Customer 7]:  order brought to the cook
+[4,00 Customer 2]:  has been served
+[4,00 Customer 4]:  order brought to the cook
+[6,42 Customer 6]:  has been served
+[6,42 Customer 0]:  order brought to the cook
+[6,94 Customer 7]:  has been served
+[6,94 Customer 5]:  order brought to the cook
+[7,88 Customer 4]:  has been served
+[9,98 Customer 5]:  has been served
+[10,23 Customer 0]:  has been served
+Total customers: 8, served in time: 6
+Cooks available: 8
+[0,00 Customer 6]:  has arrived
+[0,02 Customer 6]:  order brought to the cook
+[0,08 Customer 3]:  has arrived
+[0,08 Customer 3]:  order brought to the cook
+[0,15 Customer 2]:  has arrived
+[0,15 Customer 2]:  order brought to the cook
+[0,19 Customer 1]:  has arrived
+[0,19 Customer 1]:  order brought to the cook
+[0,20 Customer 7]:  has arrived
+[0,20 Customer 7]:  order brought to the cook
+[0,24 Customer 0]:  has arrived
+[0,24 Customer 0]:  order brought to the cook
+[0,37 Customer 5]:  has arrived
+[0,38 Customer 5]:  order brought to the cook
+[0,53 Customer 4]:  has arrived
+[0,53 Customer 4]:  order brought to the cook
+[3,08 Customer 6]:  has been served
+[3,24 Customer 1]:  has been served
+[3,27 Customer 3]:  has been served
+[3,36 Customer 0]:  has been served
+[3,39 Customer 5]:  has been served
+[3,79 Customer 2]:  has been served
+[3,79 Customer 7]:  has been served
+[3,91 Customer 4]:  has been served
+Total customers: 8, served in time: 8
