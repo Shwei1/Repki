@@ -1,0 +1,4 @@
+Status code: 200
+Server time in Kyiv: 13:05:21
+Local time in Kyiv: 13:05:21
+Equal? true

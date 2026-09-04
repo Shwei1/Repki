@@ -1,0 +1,21 @@
+Customer 10 arrived at the restaurant
+Customer 6 arrived at the restaurant
+Customer 7 arrived at the restaurant
+Customer 2 arrived at the restaurant
+Customer 3 arrived at the restaurant
+Customer 9 arrived at the restaurant
+Customer 1 arrived at the restaurant
+Customer 5 arrived at the restaurant
+Customer 4 arrived at the restaurant
+Customer 8 arrived at the restaurant
+Customer 7 has been served
+Customer 10 has been served
+Customer 6 has been served
+Customer 2 has been served
+Customer 3 has been served
+Customer 4 has been served
+Customer 5 has been served
+Customer 9 has been served
+Customer 1 has been served
+Customer 8 has been served
+Overall served in time were 5 people
