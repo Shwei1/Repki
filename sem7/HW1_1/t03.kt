@@ -4,5 +4,8 @@ fun main() {
     val c: Double = 3.14
     val d: Long = 100_000_000_000_000
     val e: Boolean = false
-    val f: Char = '\n'
+    val f: Char = '\n';
+
+    println("$f")
 }
+
