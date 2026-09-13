@@ -1,0 +1,13 @@
+== Normal class ==
+T02$1$Employee@29767156
+By reference false
+By value true
+== Data class ==
+By value true
+Worker: John Blaire, Boss
+Employee(firstName=John, secondName=Blaire, position=Janitor)
+Different bonuses yield equality: true
+== Custom dataclass ==
+By value true
+Worker: John Blaire, Boss
+Employee(firstName=John, secondName=Blaire, position=Janitor)
