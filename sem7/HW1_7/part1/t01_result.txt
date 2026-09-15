@@ -1,0 +1,6 @@
+Living Room Light is now ON.
+Adjusting Living Room Light brightness to 10%.
+Living Room Light is now OFF.
+Bedroom Thermostat is now ON.
+Bedroom Thermostat thermostat set to 5°C
+Bedroom Thermostat is now OFF.

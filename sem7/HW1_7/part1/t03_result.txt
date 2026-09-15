@@ -1,0 +1,3 @@
+Authorizing payment of $100.0
+Processing credit card payment of $100.0.
+Refunding $50.0 to the credit card

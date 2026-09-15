@@ -1,0 +1,4 @@
+Sending message: Hello!
+You've got a new message!
+Sending a smart message: Hello from SmartMessenger!
+Sending message: [smart] Hello from SmartMessenger!
