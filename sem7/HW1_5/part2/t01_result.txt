@@ -1,4 +1,4 @@
-Створено новий транспортний засіб: VehicleTasks$Vehicle@4244e477
+Створено новий транспортний засіб: Vehicle(brand=Toyota, model=Hilux, year=1999, licensePlate=ПУСЯ)
 Марка = Toyota
 Модель = Hilux
 Рік випуску: 1999
