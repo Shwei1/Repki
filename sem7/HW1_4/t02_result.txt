@@ -1,9 +1,9 @@
 == Normal class ==
-T02$1$Employee@29767156
+T02$1$Employee@25dacc5a
 By reference false
-By value true
+By value false
 == Data class ==
-By value true
+By value false
 Worker: John Blaire, Boss
 Employee(firstName=John, secondName=Blaire, position=Janitor)
 Different bonuses yield equality: true

@@ -21,7 +21,7 @@ val products = listOf(
 
 println("== Відфільтровані товари ==")
 products
-    .filter { it -> it.inStock }
+    .filter { it -> it.inStock && it.rating >= 4.7 && it.price < 1000 }
     .sortedByDescending { it.rating }
     .map {
         it -> "Назва: ${it.name} | Рейтинг: ${it.rating} | Ціна: ${it.price}"
@@ -34,7 +34,7 @@ products.find { it.category == "Laptops" && it.price > 1200 }
     ?:let { println("Товар не знайдено") }
 
 println("== Пошук навушників ==")
-println("${products.any { it.category == "Audio" && it.price > 300 }}")
+println("${products.any { it.category == "Audio" && it.rating > 4.0 }}")
 
 println("== Рейтинги телефонів ==")
 val result: Boolean = products

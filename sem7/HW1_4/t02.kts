@@ -16,7 +16,7 @@ run {
 
     // Хиба, бо без перевантаженого equals() використовується те саме порівняння
     // по посиланню
-    println("By value ${emp1 == emp3}")
+    println("By value ${emp1 == emp2}")
 
 }
 
@@ -31,7 +31,7 @@ run {
     val emp2 = Employee("John", "Blaire", "Boss")
     val emp3 = emp1
 
-    println("By value ${emp1 == emp3}")
+    println("By value ${emp1 === emp2}")
 
     val (name, surname, position) = emp1
     println("Worker: $name $surname, $position")
@@ -70,13 +70,31 @@ run {
         ): Employee {
             return Employee(firstName, secondName, position)
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Employee) return false
+
+            if (firstName != other.firstName) return false
+            if (secondName != other.secondName) return false
+            if (position != other.position) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = firstName.hashCode()
+            result = 31 * result + secondName.hashCode()
+            result = 31 * result + position.hashCode()
+            return result
+        }
     }
 
     val emp1 = Employee("John", "Blaire", "Boss")
     val emp2 = Employee("John", "Blaire", "Boss")
     val emp3 = emp1
 
-    println("By value ${emp1 == emp3}")
+    println("By value ${emp1 == emp2}")
 
     val (name, surname, position) = emp1
     println("Worker: $name $surname, $position")
