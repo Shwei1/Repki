@@ -23,7 +23,21 @@ class QuadraticEquation(a: Double, var b: Double, var c: Double) {
     constructor(b: Double, c: Double) : this(1.0, b, c)
 
     override fun toString(): String {
-        return "${a}x^2 + ${b}x + $c = 0"
+        var res = "${a}x^2 "
+        res += when {
+            (b == 0.0) -> ""
+            (b > 0.0) -> "+ ${b}x "
+            (b < 0.0) -> "- ${-b}x "
+            else -> ""
+        }
+        res += when {
+            (c == 0.0) -> ""
+            (c > 0.0) -> "+ $c"
+            (c < 0.0) -> "+ ${-c}"
+            else -> ""
+        }
+        res += " = 0"
+        return res
     }
 
     val discriminant: Double
