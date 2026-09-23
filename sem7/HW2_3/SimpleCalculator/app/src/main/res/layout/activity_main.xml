@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <EditText
+        android:id="@+id/etFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Перше число"
+        android:inputType="numberDecimal"
+        />
+
+    <EditText
+        android:id="@+id/etSecond"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Друге число"
+        android:inputType="numberDecimal"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button android:id="@+id/btnAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+" />
+        <Button android:id="@+id/btnSub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-" />
+        <Button android:id="@+id/btnMul" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*" />
+        <Button android:id="@+id/btnDiv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="/" />
+    </LinearLayout>
+
     <TextView
+        android:id="@+id/tvResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Результат:" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Очистити" />
+
+</LinearLayout>
