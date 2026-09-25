@@ -34,12 +34,12 @@ products.find { it.category == "Laptops" && it.price > 1200 }
     ?:let { println("Товар не знайдено") }
 
 println("== Пошук навушників ==")
-println("${products.any { it.category == "Audio" && it.rating > 4.0 }}")
+println("${products.any { it.category == "Audio" && it.price > 300 }}")
 
 println("== Рейтинги телефонів ==")
 val result: Boolean = products
     .filter { it.category == "Smartphones" }
-    .all { it.price > 300 }
+    .all { it.rating > 4.0 }
 println("$result")
 
 

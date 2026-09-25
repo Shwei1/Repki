@@ -33,7 +33,7 @@ class QuadraticEquation(a: Double, var b: Double, var c: Double) {
         res += when {
             (c == 0.0) -> ""
             (c > 0.0) -> "+ $c"
-            (c < 0.0) -> "+ ${-c}"
+            (c < 0.0) -> "- ${-c}"
             else -> ""
         }
         res += " = 0"
