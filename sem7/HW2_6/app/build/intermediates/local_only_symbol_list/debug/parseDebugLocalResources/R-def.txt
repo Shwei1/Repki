@@ -1,0 +1,18 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id btnReset
+id btnStart
+id etSeconds
+id tvTimer
+layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Base.Theme.HW2_6
+style Theme.HW2_6
+xml backup_rules
+xml data_extraction_rules

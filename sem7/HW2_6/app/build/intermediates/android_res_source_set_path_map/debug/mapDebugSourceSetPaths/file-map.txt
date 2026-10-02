@@ -1,0 +1,8 @@
+com.example.hw2_6.app-pngs-0 /home/shwei/repos/Repki/sem7/HW2_62/app/build/generated/res/pngs/debug
+com.example.hw2_6.app-updated_navigation_xml-1 /home/shwei/repos/Repki/sem7/HW2_62/app/build/generated/updated_navigation_xml/debug
+com.example.hw2_6.app-packageDebugResources-2 /home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.example.hw2_6.app-packageDebugResources-3 /home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.example.hw2_6.app-debug-4 /home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.example.hw2_6.app-debug-5 /home/shwei/repos/Repki/sem7/HW2_62/app/src/debug/res
+com.example.hw2_6.app-main-6 /home/shwei/repos/Repki/sem7/HW2_62/app/src/main/res
+gradleHome-0 /home/shwei/.local/share/gradle

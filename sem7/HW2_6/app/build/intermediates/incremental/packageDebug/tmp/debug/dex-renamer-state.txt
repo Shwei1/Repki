@@ -1,0 +1,19 @@
+#Fri Oct 02 21:55:30 EEST 2026
+base.0=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.1=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.2=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/dex/debug/mergeProjectDexDebug/10/classes.dex
+base.3=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/dex/debug/mergeProjectDexDebug/9/classes.dex
+base.4=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/global_synthetics_dex/debug/generateDebugGlobalSynthetics/classes.dex
+base.5=/home/shwei/repos/Repki/sem7/HW2_62/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=10/classes.dex
+path.3=9/classes.dex
+path.4=classes.dex
+path.5=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
+renamed.4=classes5.dex
+renamed.5=classes6.dex
