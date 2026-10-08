@@ -1,0 +1,19 @@
+# Track only hand-written parts of the HW2_* Android projects:
+#   src/main/java/**, AndroidManifest.xml, res/layout/activity_main.xml, app/build.gradle.kts
+
+# Ignore everything inside HW2_*, but keep directories traversable
+HW2_*/**
+!HW2_*/**/
+
+# Generated / local directories stay ignored entirely
+HW2_*/**/build/
+HW2_*/**/.gradle/
+HW2_*/**/.idea/
+HW2_*/**/.kotlin/
+
+# Whitelist
+!HW2_*/**/app/build.gradle.kts
+!HW2_*/**/app/src/main/AndroidManifest.xml
+!HW2_*/**/app/src/main/res/layout/activity_main.xml
+!HW2_*/**/app/src/main/java/**
+!HW2_*/**/*.md
