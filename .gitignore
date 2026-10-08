@@ -165,3 +165,11 @@ cython_debug/
 *.jar
 
 **/.idea/
+
+*.bmp
+*.webp
+**/androidTest
+*gradle*
+**/res
+!**/res/drawable/layout
+**/app/src/test/
