@@ -16,8 +16,6 @@ class BroadcastViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val _events = MutableStateFlow<List<BroadcastEvent>>(emptyList())
 
-    // While the UI is collecting: the callbackFlow keeps the receiver registered and
-    // prepends new events to _events; the UI gets every change of _events (including deletions)
     val events: StateFlow<List<BroadcastEvent>> = channelFlow {
         launch {
             repository.observeEvents().collect { event ->

@@ -118,7 +118,6 @@ fun ExpandableEventCard(
             .animateContentSize()
     ) {
         Column(Modifier.padding(16.dp)) {
-            // Collapsed: event name + time only
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
@@ -136,7 +135,6 @@ fun ExpandableEventCard(
                 }
             }
 
-            // Expanded: all details
             AnimatedVisibility(visible = isExpanded) {
                 Column(Modifier.padding(top = 8.dp)) {
                     HorizontalDivider()
