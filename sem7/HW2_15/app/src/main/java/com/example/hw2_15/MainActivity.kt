@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Button(onClick = {
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiredNetworkType(NetworkType.UNMETERED)
                 .setRequiresCharging(true)
                 .build()
 
