@@ -1,6 +1,7 @@
 package com.example.hw2_17
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,19 +23,20 @@ class ExchangeArchiveViewModel(application: Application) : AndroidViewModel(appl
     private val _pickedDate = MutableStateFlow(currentDate)
     val pickedDate = _pickedDate.asStateFlow()
 
-    private val _uiState = MutableStateFlow<ExchangeRatesUiState>(ExchangeRatesUiState.Loading)
+    private val _uiState = MutableStateFlow<ExchangeRatesUiState>(ExchangeRatesUiState.Start)
     val uiState = _uiState.asStateFlow()
 
     private var currentCall: Call<ExchangeArchiveResponse?>? = null
 
-    init {
-        fetchArchive()
-    }
+//    init {
+//        fetchArchive()
+//    }
 
     fun fetchArchive() {
         currentCall?.cancel()
         _uiState.value = ExchangeRatesUiState.Loading
 
+        Log.d(TAG, "Запит курсів за ${_pickedDate.value}")
         val call = networkModule.service.getExchangeRates(_pickedDate.value)
 
         if (call == null) {
@@ -57,7 +59,7 @@ class ExchangeArchiveViewModel(application: Application) : AndroidViewModel(appl
                         "Сервер повернув HTTP ${response.code()}. Спробуйте пізніше."
                     )
                     archive == null -> ExchangeRatesUiState.Error(
-                        "Сервер повернул відповідь без даних."
+                        "Сервер повернув відповідь без даних."
                     )
                     else -> ExchangeRatesUiState.Success(archive)
                 }
@@ -89,10 +91,17 @@ class ExchangeArchiveViewModel(application: Application) : AndroidViewModel(appl
 
     fun onDateChosen(date: String) {
         val parsedDate = parseDateOrNull(date)
-        if (parsedDate != null && !parsedDate.isAfter(LocalDate.now())) {
+        val today = LocalDate.now()
+        if (parsedDate != null &&
+            !parsedDate.isAfter(today) &&
+            !parsedDate.isBefore(today.minusYears(ARCHIVE_YEARS))
+        ) {
             _pickedDate.value = date
-            fetchArchive()
         } // Інакше ігноруємо
     }
 
+    companion object {
+        private const val TAG = "ExchangeArchive"
+        const val ARCHIVE_YEARS = 4L
+    }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hw2_17.ui.theme.ComposeTheme
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -43,8 +43,6 @@ import java.time.Instant
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel: ExchangeArchiveViewModel by viewModels()
-
     private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +50,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeTheme {
+                val viewModel: ExchangeArchiveViewModel = viewModel()
                 val pickedDate by viewModel.pickedDate.collectAsStateWithLifecycle()
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -91,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 readOnly = true,
                 label = { Text("Дата") },
                 trailingIcon = {
-                    TextButton(onClick = { showPicker = true }) { Text("Обрати") }
+                    TextButton(onClick = { showPicker = true }, enabled = uiState !is ExchangeRatesUiState.Loading) { Text("Обрати") }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -104,6 +103,10 @@ class MainActivity : ComponentActivity() {
 
             Box(Modifier.fillMaxWidth().weight(1f)) {
                 when (uiState) {
+                    ExchangeRatesUiState.Start ->
+                        Column(Modifier.align(Alignment.Center)) {
+                            Text("Введіть дату, щоб подивитися курс валют.")
+                        }
                     ExchangeRatesUiState.Loading ->
                         CircularProgressIndicator(Modifier.align(Alignment.Center))
 
@@ -117,6 +120,7 @@ class MainActivity : ComponentActivity() {
 
                     is ExchangeRatesUiState.Success -> {
                         val rates = uiState.archive.exchangeRate
+                            .filter { !it.currency.isNullOrBlank()}
                         if (rates.isEmpty()) {
                             Text(
                                 "Немає даних за ${uiState.archive.date}",
@@ -129,15 +133,15 @@ class MainActivity : ComponentActivity() {
                                 )
                                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                                     Text("Валюта", Modifier.weight(1f))
-                                    Text("Банк купує (грн)", Modifier.weight(1f))
-                                    Text("Банк продає (грн)", Modifier.weight(1f))
+                                    Text("Банк купує (${uiState.archive.baseCurrencyLit})", Modifier.weight(1f))
+                                    Text("Банк продає (${uiState.archive.baseCurrencyLit})", Modifier.weight(1f))
                                 }
                                 LazyColumn(Modifier.weight(1f)) {
-                                    items(rates, key = { it.currency }) { rate ->
+                                    items(rates, key = { it.currency!! }) { rate ->
                                         Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                                             val purchaseRateNonNull = rate.purchaseRate?.toString() ?: "-"
                                             val saleRateNonNull = rate.saleRate?.toString() ?: "-"
-                                            Text(rate.currency, Modifier.weight(1f))
+                                            Text(rate.currency!!, Modifier.weight(1f))
                                             Text(
                                                 purchaseRateNonNull,
                                                 Modifier.weight(1f)
@@ -157,14 +161,21 @@ class MainActivity : ComponentActivity() {
         }
 
         if (showPicker) {
+            val today = LocalDate.now()
+            val minDate = today.minusYears(ExchangeArchiveViewModel.ARCHIVE_YEARS)
+            val minMillis = minDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
             val state = rememberDatePickerState(
                 initialSelectedDateMillis = LocalDate.parse(pickedDate, formatter)
                     .atStartOfDay(ZoneOffset.UTC)
                     .toInstant()
                     .toEpochMilli(),
+                yearRange = minDate.year..today.year,
                 selectableDates = object : SelectableDates {
                     override fun isSelectableDate(utcTimeMillis: Long) =
-                        utcTimeMillis <= System.currentTimeMillis()
+                        utcTimeMillis in minMillis..System.currentTimeMillis()
+
+                    override fun isSelectableYear(year: Int) =
+                        year in minDate.year..today.year
                 }
             )
             DatePickerDialog(
