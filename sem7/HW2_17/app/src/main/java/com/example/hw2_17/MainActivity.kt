@@ -4,44 +4,190 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.hw2_17.ui.theme.HW2_17Theme
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.hw2_17.ui.theme.ComposeTheme
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.Instant
 
 class MainActivity : ComponentActivity() {
+
+    val viewModel: ExchangeArchiveViewModel by viewModels()
+
+    private val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            HW2_17Theme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+            ComposeTheme {
+                val pickedDate by viewModel.pickedDate.collectAsStateWithLifecycle()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    CurrencyRatesScreen(
+                        pickedDate = pickedDate,
+                        uiState = uiState,
+                        onDateChosen = viewModel::onDateChosen,
+                        onLoadRates = viewModel::fetchArchive,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HW2_17Theme {
-        Greeting("Android")
+    @Composable
+    fun CurrencyRatesScreen(
+        pickedDate: String,
+        uiState: ExchangeRatesUiState,
+        onDateChosen: (String) -> Unit,
+        onLoadRates: () -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+
+        var showPicker by rememberSaveable { mutableStateOf(false) }
+
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedTextField(
+                value = pickedDate,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Дата") },
+                trailingIcon = {
+                    TextButton(onClick = { showPicker = true }) { Text("Обрати") }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(
+                onClick = onLoadRates,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Показати курси")
+            }
+
+            Box(Modifier.fillMaxWidth().weight(1f)) {
+                when (uiState) {
+                    ExchangeRatesUiState.Loading ->
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+
+                    is ExchangeRatesUiState.Error -> Column(
+                        Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(uiState.message)
+                        Button(onClick = onLoadRates) { Text("Повторити") }
+                    }
+
+                    is ExchangeRatesUiState.Success -> {
+                        val rates = uiState.archive.exchangeRate
+                        if (rates.isEmpty()) {
+                            Text(
+                                "Немає даних за ${uiState.archive.date}",
+                                Modifier.align(Alignment.Center)
+                            )
+                        } else {
+                            Column(modifier = Modifier.fillMaxSize()) {
+                                Text(
+                                    "Курси станом на ${uiState.archive.date}",
+                                )
+                                Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                                    Text("Валюта", Modifier.weight(1f))
+                                    Text("Банк купує (грн)", Modifier.weight(1f))
+                                    Text("Банк продає (грн)", Modifier.weight(1f))
+                                }
+                                LazyColumn(Modifier.weight(1f)) {
+                                    items(rates, key = { it.currency }) { rate ->
+                                        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                                            val purchaseRateNonNull = rate.purchaseRate?.toString() ?: "-"
+                                            val saleRateNonNull = rate.saleRate?.toString() ?: "-"
+                                            Text(rate.currency, Modifier.weight(1f))
+                                            Text(
+                                                purchaseRateNonNull,
+                                                Modifier.weight(1f)
+                                            )
+                                            Text(
+                                                saleRateNonNull,
+                                                Modifier.weight(1f)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (showPicker) {
+            val state = rememberDatePickerState(
+                initialSelectedDateMillis = LocalDate.parse(pickedDate, formatter)
+                    .atStartOfDay(ZoneOffset.UTC)
+                    .toInstant()
+                    .toEpochMilli(),
+                selectableDates = object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long) =
+                        utcTimeMillis <= System.currentTimeMillis()
+                }
+            )
+            DatePickerDialog(
+                onDismissRequest = { showPicker = false },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            state.selectedDateMillis?.let { ms ->
+                                val date = Instant.ofEpochMilli(ms)
+                                    .atZone(ZoneOffset.UTC)
+                                    .toLocalDate()
+                                onDateChosen(date.format(formatter))
+                                showPicker = false
+                            }
+                        }
+                    ) { Text("Ввести") }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showPicker = false
+                    }) { Text("Скасувати") }
+                }
+            ) { DatePicker(state = state) }
+        }
     }
 }

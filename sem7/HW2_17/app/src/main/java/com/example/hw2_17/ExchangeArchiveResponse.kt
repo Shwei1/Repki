@@ -1,6 +1,6 @@
 package com.example.hw2_17
 
-data class ExchangeArchiveResponseX(
+data class ExchangeArchiveResponse(
     val bank: String,
     val baseCurrency: Int,
     val baseCurrencyLit: String,
