@@ -96,7 +96,8 @@ class MainActivity : ComponentActivity() {
             )
             Button(
                 onClick = onLoadRates,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = uiState !is ExchangeRatesUiState.Loading
             ) {
                 Text("Показати курси")
             }
