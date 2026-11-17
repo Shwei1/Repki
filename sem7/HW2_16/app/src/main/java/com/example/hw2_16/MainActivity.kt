@@ -2,6 +2,7 @@ package com.example.hw2_16
 
 import android.Manifest
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,6 +10,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,16 +39,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.example.hw2_16.ui.theme.HW2_16Theme
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel_: Application? = null
+    val viewModel: WaterReminderViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = WaterReminderViewModel(application)
         enableEdgeToEdge()
         setContent {
             RequestNotificationPermission()
@@ -62,10 +69,12 @@ fun WaterReminderScreen(
     viewModel: WaterReminderViewModel
 ) {
     val state by viewModel.isScheduled.collectAsStateWithLifecycle()
+    val sent by viewModel.notificationsSent.collectAsStateWithLifecycle()
     var intervalText by rememberSaveable { mutableStateOf("60") }
 
     val interval = intervalText.toLongOrNull()
     val isErr = interval == null || interval < 15
+
 
     Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         InputTextBox(
@@ -86,6 +95,7 @@ fun WaterReminderScreen(
             },
             modifier = Modifier.padding(top = 8.dp)
         )
+        Text("Відправлено $sent оповіщень.")
     }
 }
 
@@ -123,7 +133,7 @@ fun ReminderSwtich(
     modifier: Modifier
 ) {
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text("Water reminders", Modifier.weight(1f))
+        Text("Нагадування", Modifier.weight(1f))
         Switch(checked = checked, enabled = enabled, onCheckedChange = onCheckedChange)
     }
 }

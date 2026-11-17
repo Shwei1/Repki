@@ -13,7 +13,10 @@ class WaterReminderWorker(
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
+    val settings = ValuesRepository(applicationContext.dataStore)
+
     override suspend fun doWork(): Result {
+
         val manager = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel(manager)
         val notification = NotificationCompat.Builder(applicationContext, "water_channel")
@@ -21,14 +24,14 @@ class WaterReminderWorker(
             .setContentText("Час випити склянку води! 💧")
             .setSmallIcon(R.drawable.ic_water_drop)
             .build()
-
         manager.notify(System.currentTimeMillis().toInt(), notification)
+        settings.incrementNotifications()
         return Result.success()
     }
 
     private fun createNotificationChannel(manager: NotificationManager) {
         val channelId = "water_channel"
-        val channelName = "Фоновий таймер"
+        val channelName = "Нагадування про воду"
         val channel = NotificationChannel(
             channelId,
             channelName,
